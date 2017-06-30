@@ -37,10 +37,13 @@
     "lodash": "~2.4.1"
   },
   "devDependencies": {
-    "mocha": "~1.21.4",
+    "@earnest/eslint-config": "^2.1.1",
     "chai": "~1.9.1",
+    "eslint": "^4.1.1",
+    "eslint-plugin-mocha": "^4.11.0",
     "istanbul": "~0.3.0",
-    "sinon": "~1.10.3",
-    "nock": "~0.45.0"
+    "mocha": "~1.21.4",
+    "nock": "~0.45.0",
+    "sinon": "~1.10.3"
   }
 }
