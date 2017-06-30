@@ -12,7 +12,10 @@
   "homepage": "https://github.com/meetearnest/global-request-logger",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/**/*.spec.js --reporter spec"
+    "lint": "./node_modules/.bin/eslint .",
+    "lint:fix": "./node_modules/.bin/eslint --fix .",
+    "test": "mocha test/**/*.spec.js --reporter spec",
+    "test:watch": "mocha --watch test/**/*.spec.js --reporter spec"
   },
   "engines": [
     "node"

@@ -3,7 +3,10 @@
 set -euo pipefail
 
 cd "$(dirname "$0")"
+
+source "./_common.sh"
+
 cd "../.."
 
-npm install
-npm test
+./go install
+./go test

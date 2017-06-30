@@ -1,14 +1,10 @@
 #!/usr/bin/env bash
 
-function login_npm {
-  local npmrc_contents="//registry.npmjs.org/:_authToken=${NPM_TOKEN}"
-  echo $npmrc_contents > "${HOME}/.npmrc"
-  echo $npmrc_contents > "${SNAP_WORKING_DIR}/.npmrc"
-}
-
 cd "$(dirname "$0")"
+
+source "./common.sh"
+
 cd "../.."
 
-[ -n "${NPM_TOKEN-}" ] && login_npm
 npm install autopublish
 ./node_modules/.bin/autopublish .

@@ -1,6 +1,8 @@
 # Node.js Global Request Logger [![Build Status](https://app.snap-ci.com/meetearnest/global-request-logger/branch/master/build_image)](https://app.snap-ci.com/meetearnest/global-request-logger/branch/master)
 
-This module configures the [`http`](http://nodejs.org/api/http.html) and [`https`](http://nodejs.org/api/https.html) 
+This is a publicly available library published by Earnest.
+
+This public module configures the [`http`](http://nodejs.org/api/http.html) and [`https`](http://nodejs.org/api/https.html) 
 modules to raise logging events for every outgoing http request.
 
 Any library or module that uses the default `http` and `https` modules will be captured. The primary use case is for 

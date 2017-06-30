@@ -1,0 +1,16 @@
+dev:
+  build: "."
+  ports:
+    - "3000"
+  volumes:
+    - ".:/usr/src/app"
+  volumes_from:
+    - node_modules
+  environment:
+    - APP_ENV=development
+
+node_modules:
+  build: "."
+  entrypoint: '/bin/echo node_modules data-only container for dev'
+  volumes:
+    - "/usr/src/app/node_modules"
