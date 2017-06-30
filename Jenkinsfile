@@ -49,7 +49,7 @@ pipeline {
     }
     stage("Run all unit tests") {
       steps {
-        sh "./scripts/ci/isolated"
+        sh "./scripts/ci/test"
       }
     }
     stage("Publish latest version") {
