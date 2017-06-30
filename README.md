@@ -1,4 +1,4 @@
-# Node.js Global Request Logger [![Build Status](https://app.snap-ci.com/meetearnest/global-request-logger/branch/master/build_image)](https://app.snap-ci.com/meetearnest/global-request-logger/branch/master)
+# Node.js Global Request Logger [![Build Status](https://jenkins-external.tools.earnest.com/buildStatus/icon?job=meetearnest/global-request-logger/master)](https://jenkins.tools.earnest.com/job/meetearnest/job/global-request-logger/job/master/)
 
 This is a publicly available library published by Earnest.
 

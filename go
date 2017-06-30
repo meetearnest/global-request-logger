@@ -127,8 +127,6 @@ case "${1}" in
   ;;
   nuke) nuke
   ;;
-  build) build
-  ;;
   install) _install
   ;;
   exec) cmd $@
