@@ -1,16 +1,16 @@
-dev:
-  build: "."
-  ports:
-    - "3000"
-  volumes:
-    - ".:/usr/src/app"
-  volumes_from:
-    - node_modules
-  environment:
-    - APP_ENV=development
+version: "3"
 
-node_modules:
-  build: "."
-  entrypoint: '/bin/echo node_modules data-only container for dev'
-  volumes:
-    - "/usr/src/app/node_modules"
+volumes:
+  node_modules:
+    labels:
+      com.earnest.description: "Data only volume for installed node dependencies"
+
+services:
+  dev:
+    build: .
+    labels:
+      com.earnest.description: "Global request logging library dev environment"
+      com.earnest.public: ""
+    volumes:
+      - .:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
