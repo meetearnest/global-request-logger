@@ -25,26 +25,17 @@ pipeline {
       steps {
         parallel (
           "NPM:Verify": {
-            withEnv([
-              "NPMRC_FILE=${HOME}/.npmrc"
-            ]) {
-              sh "cp ${NPMRC_FILE} ."
-              sh "npm --version"
-              sh "npm whoami"
-            }
+            prepareNodeEnv ()
           },
           "Docker:Verify": {
-            sh "docker --version"
-            sh "docker info"
-            sh "docker-compose --version"
-            sh "docker-compose down" // Ensure environment is pristine
+            prepareDockerEnv ()
           }
         )
       }
     }
     stage("Display ENV data") {
       steps {
-        printEnvSorted ''
+        printEnvSorted ()
       }
     }
     stage("Run all unit tests") {

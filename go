@@ -31,11 +31,13 @@ function helptext {
   echo "Available commands are:"
   echo "    help              Show this help"
   echo "    exec              Execute any command inside the dev image"
-  echo "    generate-docs     Generates JSDocs for the source of this project"
   echo "    nuke              Destroy all your running containers"
   echo "    prepush           Run prepush checks (e.g. test, lint)"
   echo "    test              Run all tests"
   echo "    test:watch        Run tests in watch mode"
+  echo "    install           Install dependencies"
+  echo "    lint              Lint the repository"
+  echo "    lint:fix          Lint in fix mode"
 }
 
 function cmd {
@@ -117,11 +119,11 @@ case "${1}" in
   ;;
   lint) npm_run lint
   ;;
+  lint:fix) npm_run lint:fix
+  ;;
   init) init
   ;;
   pre[-_]push|prepush) pre_push
-  ;;
-  lint:changed) lint_changed
   ;;
   pre[-_]commit) precommit
   ;;

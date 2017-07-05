@@ -1,4 +1,4 @@
-# Node.js Global Request Logger [![Build Status](https://jenkins-external.tools.earnest.com/buildStatus/icon?job=meetearnest/global-request-logger/master)](https://jenkins.tools.earnest.com/job/meetearnest/job/global-request-logger/job/master/)
+# Node.js Global Request Logger
 
 This is a publicly available library published by Earnest.
 
@@ -95,7 +95,27 @@ The `initialize` function accepts an options argument that can configure logging
  
 - **maxBodyLength** - The maximum length (in bytes) to log for a request or response body.
 
+# Contributing
+
+To get started, take a look at the output of `./go help`.
+Then, run `./go` to configure the environment and dependencies.
+
+## Getting Started:
+Usage: ./go <command>
+
+Available commands are:
+    help              Show this help
+    exec              Execute any command inside the dev image
+    nuke              Destroy all your running containers
+    prepush           Run prepush checks (e.g. test, lint)
+    test              Run all tests
+    test:watch        Run tests in watch mode
+    install           Install dependencies
+    lint              Lint the repository
+    lint:fix          Lint in fix mode
+
+You can pass any of those as an argument to run the related task in this repository. 
 
 ## Testing
 
-Unit tests are provided and can be run via `npm test`
+Use either `./go test` or `./go test:unit` to run 
