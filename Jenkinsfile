@@ -25,7 +25,7 @@ pipeline {
       steps {
         parallel (
           "NPM:Verify": {
-            prepareNodeEnv ()
+            prepareNpmEnv ()
           },
           "Docker:Verify": {
             prepareDockerEnv ()

@@ -1,34 +1,27 @@
 'use strict';
 
-var
-  should        = require('chai').should(),
-  sinon         = require('sinon'),
-  http          = require('http'),
-  https         = require('https'),
-  events        = require('events'),
-  stream        = require('stream'),
-  _             = require('lodash'),
-  globalLogger  = require('../index')
-  ;
+
+const should        = require('chai').should();
+const http          = require('http');
+const _             = require('lodash');
+const globalLogger  = require('../index');
 
 describe('Global Request Logger', function () {
-  describe('request overrides', function() {
+  describe('request overrides', function () {
     it('should return a singleton instance', function () {
-      var globalLogger2 = require('../index');
+      const globalLogger2 = require('../index');
       globalLogger.should.equal(globalLogger2);
     });
 
     it('should mixin globals', function () {
-      var origHttpRequest = http.request;
-      var origHttpsRequest = https.request;
+      const origHttpRequest = http.request;
       globalLogger.initialize();
       (http.request !== origHttpRequest).should.equal(true, 'after init http is overwritten');
       globalLogger.end();
     });
 
     it('should reset globals on end', function () {
-      var origHttpRequest = http.request;
-      var origHttpsRequest = https.request;
+      const origHttpRequest = http.request;
       globalLogger.initialize();
       globalLogger.end();
       (http.request === origHttpRequest).should.equal(true, 'after end http is restored');
@@ -65,20 +58,20 @@ describe('Global Request Logger', function () {
   });
 
   describe('request logging', function () {
-    var nock = require('nock');
+    const nock = require('nock');
 
-    describe('events', function() {
-      before(function() {
+    describe('events', function () {
+      before(function () {
         globalLogger.initialize();
         nock.disableNetConnect();
       });
-      after(function() {
+      after(function () {
         globalLogger.end();
       });
 
       it('should log request error', function (done) {
         http.get('http://www.example.com');
-        globalLogger.once('error', function(req, res) {
+        globalLogger.once('error', function (req, res) {
           should.exist(req);
           req.should.have.property('error');
 
@@ -113,7 +106,7 @@ describe('Global Request Logger', function () {
           .get('/')
           .reply(200, 'Example');
 
-        var req = http.get('http://www.example.com');
+        const req = http.get('http://www.example.com');
         req.write('Write to the body');
         globalLogger.once('success', function (req) {
           should.exist(req);
@@ -129,7 +122,7 @@ describe('Global Request Logger', function () {
 
         globalLogger.maxBodyLength = 2;
 
-        var req = http.get('http://www.example.com');
+        const req = http.get('http://www.example.com');
         req.write('Write to the body');
         globalLogger.once('success', function (req) {
           should.exist(req);
@@ -143,7 +136,7 @@ describe('Global Request Logger', function () {
           .get('/')
           .reply(200, 'Example');
 
-        var req = http.get('http://www.example.com');
+        const req = http.get('http://www.example.com');
         req.write('Write to the body');
         globalLogger.once('success', function (req, res) {
           res.should.have.property('body', 'Ex');
@@ -157,7 +150,7 @@ describe('Global Request Logger', function () {
           .reply(200, 'Example');
 
         globalLogger.maxBodyLength = Infinity;
-        var req = http.get('http://www.example.com');
+        const req = http.get('http://www.example.com');
         req.write('Write');
         req.write('To');
         req.write('The');
@@ -169,5 +162,5 @@ describe('Global Request Logger', function () {
         });
       });
     });
-  })
+  });
 });

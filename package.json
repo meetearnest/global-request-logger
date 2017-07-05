@@ -39,7 +39,7 @@
   "devDependencies": {
     "@earnest/eslint-config": "^2.1.1",
     "chai": "~1.9.1",
-    "eslint": "^4.1.1",
+    "eslint": "^3.17.1",
     "eslint-plugin-mocha": "^4.11.0",
     "istanbul": "~0.3.0",
     "mocha": "~1.21.4",

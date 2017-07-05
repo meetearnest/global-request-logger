@@ -51,6 +51,7 @@ function npm_run {
 }
 
 function pre_push {
+  npm_run lint
   npm_run test
 }
 

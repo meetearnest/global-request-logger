@@ -1,15 +1,13 @@
 'use strict';
 
-var
-  http           = require('http'),
-  https          = require('https'),
-  _              = require('lodash'),
-  events         = require('events'),
-  util           = require('util'),
-  url            = require('url')
-;
+const  http           = require('http');
+const  https          = require('https');
+const  _              = require('lodash');
+const  events         = require('events');
+const  util           = require('util');
+const  url            = require('url');
 
-var ORIGINALS;
+let ORIGINALS;
 function saveGlobals() {
   ORIGINALS = {
     http: _.pick(http, 'request'),
@@ -23,19 +21,19 @@ function resetGlobals() {
   globalLogSingleton.isEnabled = false;
 }
 
-var GlobalLog = function () {
+let GlobalLog = function () {
   this.isEnabled = false;
   events.EventEmitter.call(this);
 };
 util.inherits(GlobalLog, events.EventEmitter);
 
-var globalLogSingleton = module.exports = new GlobalLog();
+let globalLogSingleton = module.exports = new GlobalLog();
 
 
 function logBodyChunk(array, chunk) {
   if (chunk) {
-    var toAdd = chunk;
-    var newLength = array.length + chunk.length;
+    let toAdd = chunk;
+    let newLength = array.length + chunk.length;
     if (newLength > globalLogSingleton.maxBodyLength) {
       toAdd = chunk.slice(0, globalLogSingleton.maxBodyLength - newLength);
     }
@@ -45,10 +43,10 @@ function logBodyChunk(array, chunk) {
 
 
 function attachLoggersToRequest(protocol, options, callback) {
-  var httporhttps = this;
-  var req = ORIGINALS[protocol].request.call(httporhttps, options, callback);
+  let self = this;
+  let req = ORIGINALS[protocol].request.call(self, options, callback);
 
-  var logInfo = {
+  let logInfo = {
     request: {},
     response: {}
   };
@@ -57,14 +55,28 @@ function attachLoggersToRequest(protocol, options, callback) {
   if (typeof options === 'string') {
     options = url.parse(options);
   }
-  _.assign(logInfo.request, _.pick(options, 'port', 'path', 'host', 'protocol', 'auth', 'hostname', 'hash', 'search', 'query', 'pathname', 'href'));
+  _.assign(logInfo,
+    _.pick(
+      options,
+      'port',
+      'path',
+      'host',
+      'protocol',
+      'auth',
+      'hostname',
+      'hash',
+      'search',
+      'query',
+      'pathname',
+      'href'
+  ));
 
   logInfo.request.method = req.method || 'get';
   logInfo.request.headers = req._headers;
 
-  var requestData = [];
-  var originalWrite = req.write;
-  req.write = function() {
+  const requestData = [];
+  let originalWrite = req.write;
+  req.write = function () {
     logBodyChunk(requestData, arguments[0]);
     originalWrite.apply(req, arguments);
   };
@@ -76,9 +88,18 @@ function attachLoggersToRequest(protocol, options, callback) {
 
   req.on('response', function (res) {
     logInfo.request.body = requestData.join('');
-    _.assign(logInfo.response, _.pick(res, 'statusCode', 'headers', 'trailers', 'httpVersion', 'url', 'method'));
+    _.assign(logInfo.response,
+      _.pick(
+        res,
+        'statusCode',
+        'headers',
+        'trailers',
+        'httpVersion',
+        'url',
+        'method'
+    ));
 
-    var responseData = [];
+    let responseData = [];
     res.on('data', function (data) {
       logBodyChunk(responseData, data);
     });

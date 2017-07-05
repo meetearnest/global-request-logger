@@ -9,4 +9,5 @@ source "./_common.sh"
 cd "../.."
 
 ./go install
+./go lint
 ./go test
