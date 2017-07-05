@@ -69,6 +69,12 @@ function attachLoggersToRequest(protocol, options, callback) {
     originalWrite.apply(req, arguments);
   };
 
+  var originalEnd = req.end;
+  req.end = function() {
+    logInfo.start = Date.now();
+    originalEnd.apply(req, arguments);
+  };
+
   req.on('error', function (error) {
     logInfo.request.error = error;
     globalLogSingleton.emit('error', logInfo.request, logInfo.response);
@@ -77,6 +83,7 @@ function attachLoggersToRequest(protocol, options, callback) {
   req.on('response', function (res) {
     logInfo.request.body = requestData.join('');
     _.assign(logInfo.response, _.pick(res, 'statusCode', 'headers', 'trailers', 'httpVersion', 'url', 'method'));
+    logInfo.response.duration = Date.now() - logInfo.start;
 
     var responseData = [];
     res.on('data', function (data) {

@@ -168,6 +168,22 @@ describe('Global Request Logger', function () {
           done();
         });
       });
+
+
+    it('should have duration property on the response', function (done) {
+      nock('http://www.example.com')
+        .get('/')
+        .delay(20)
+        .reply(200, 'Example');
+
+      var req = http.get('http://www.example.com');
+      req.write('Write to the body');
+      globalLogger.once('success', function (req, res) {
+        res.should.have.property('duration');
+        done();
+      });
+    });
+
     });
   })
 });
