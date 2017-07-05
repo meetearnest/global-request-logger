@@ -1,7 +1,5 @@
 FROM node:6.10
 
-VOLUME /root/.npm
-
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
