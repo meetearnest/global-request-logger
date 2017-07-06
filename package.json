@@ -1,6 +1,6 @@
 {
   "name": "global-request-logger",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "This module configures the http and https modules to raise logging events for every outgoing request.",
   "keywords": [
     "http",
