@@ -73,6 +73,7 @@ function attachLoggersToRequest(protocol, options, callback) {
 
   logInfo.request.method = req.method || 'get';
   logInfo.request.headers = req._headers;
+  logInfo.request.time = new Date();
 
   const requestData = [];
   let originalWrite = req.write;
@@ -98,6 +99,11 @@ function attachLoggersToRequest(protocol, options, callback) {
         'url',
         'method'
     ));
+
+    logInfo.response.time = new Date();
+
+    const responseTimeMillis = logInfo.response.time.getTime() - logInfo.request.time.getTime();
+    logInfo.response.responseTime = responseTimeMillis + 'ms';
 
     let responseData = [];
     res.on('data', function (data) {
