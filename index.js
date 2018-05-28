@@ -118,6 +118,8 @@ function attachLoggersToRequest(protocol, options, callback) {
 
 
 GlobalLog.prototype.initialize = function (options) {
+  if(globalLogSingleton.isEnabled) return;
+
   options = options || {};
   _.defaults(options, {
     maxBodyLength: 1024 * 1000 * 3
