@@ -83,6 +83,7 @@ function attachLoggersToRequest(protocol, options, callback) {
 
   req.on('error', function (error) {
     logInfo.request.error = error;
+    logInfo.request.errorTime = new Date().getTime();
     globalLogSingleton.emit('error', logInfo.request, logInfo.response);
   });
 
@@ -105,14 +106,18 @@ function attachLoggersToRequest(protocol, options, callback) {
     });
     res.on('end', function () {
       logInfo.response.body = responseData.join('');
+      logInfo.response.recievedTime = new Date().getTime();
       globalLogSingleton.emit('success', logInfo.request, logInfo.response);
     });
     res.on('error', function (error) {
       logInfo.response.error = error;
+      logInfo.response.errorTime = new Date().getTime();
       globalLogSingleton.emit('error', logInfo.request, logInfo.response);
     });
   });
 
+  logInfo.request.sendTime = new Date().getTime();
+  
   return req;
 }
 
