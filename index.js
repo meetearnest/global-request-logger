@@ -43,6 +43,7 @@ function logBodyChunk(array, chunk) {
 
 
 function attachLoggersToRequest(protocol, options, callback) {
+  globalLogSingleton.emit('before', protocol, options);
   let self = this;
   let req = ORIGINALS[protocol].request.call(self, options, callback);
 
