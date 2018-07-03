@@ -105,6 +105,7 @@ function attachLoggersToRequest(protocol, options, callback) {
     res.on('data', function (data) {
       logBodyChunk(responseData, data);
     });
+    res.pause();
     res.on('end', function () {
       logInfo.response.body = responseData.join('');
       logInfo.response.recievedTime = new Date().getTime();
