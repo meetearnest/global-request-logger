@@ -55,7 +55,7 @@ function attachLoggersToRequest(protocol, options, callback) {
   if (typeof options === 'string') {
     options = url.parse(options);
   }
-  _.assign(logInfo,
+  _.assign(logInfo.request,
     _.pick(
       options,
       'port',
