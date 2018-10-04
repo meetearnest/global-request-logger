@@ -2,7 +2,7 @@
 
 const  http           = require('http');
 const  https          = require('https');
-const  _              = require('lodash');
+const  _              = require('./object-functions');
 const  events         = require('events');
 const  util           = require('util');
 const  url            = require('url');
