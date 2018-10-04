@@ -25,7 +25,8 @@
     "url": "git://github.com/meetearnest/global-request-logger.git"
   },
   "files": [
-    "index.js"
+    "index.js",
+    "object-functions.js"
   ],
   "author": {
     "name": "Brian Romanko",
@@ -34,7 +35,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "lodash": "~2.4.1"
   },
   "devDependencies": {
     "@earnest/eslint-config": "^2.1.1",
