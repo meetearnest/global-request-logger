@@ -79,10 +79,11 @@ function attachLoggersToRequest(protocol, options, callback) {
   logInfo.request.headers = req._headers;
 
   const requestData = [];
-  let originalWrite = req.write;
-  req.write = function () {
+  // wrap the request _send instead of Write, because aws-sdk different behaviour between node 6 to node 8
+  let original_send = req._send;
+  req._send = function () {
     logBodyChunk(requestData, arguments[0]);
-    originalWrite.apply(req, arguments);
+    original_send.apply(req, arguments);
   };
 
   req.on('error', function (error) {
