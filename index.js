@@ -93,6 +93,8 @@ function attachLoggersToRequest(protocol, options, callback) {
   });
 
   req.on('response', function (res) {
+    globalLogSingleton.emit('response', req, res);
+  
     const alreadyListensToDataEvent = res.eventNames().reduce((hasDataEvent, eventName) => {
         const DataEvent = "data";
         if (!hasDataEvent) {
