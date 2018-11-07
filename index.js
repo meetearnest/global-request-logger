@@ -93,6 +93,13 @@ function attachLoggersToRequest(protocol, options, callback) {
   });
 
   req.on('response', function (res) {
+    const alreadyListensToDataEvent = res.eventNames().reduce((hasDataEvent, eventName) => {
+        const DataEvent = "data";
+        if (!hasDataEvent) {
+            hasDataEvent = eventName == DataEvent;
+        }
+        return hasDataEvent;
+    }, false);
     logInfo.request.body = requestData.join('');
     _.assign(logInfo.response,
       _.pick(
@@ -109,7 +116,9 @@ function attachLoggersToRequest(protocol, options, callback) {
     res.on('data', function (data) {
       logBodyChunk(responseData, data);
     });
-    res.pause();
+    if (!alreadyListensToDataEvent) {
+        res.pause();
+    }
     res.on('end', function () {
       logInfo.response.body = responseData.join('');
       logInfo.response.recievedTime = new Date().getTime();
@@ -140,7 +149,7 @@ GlobalLog.prototype.initialize = function (options) {
 
   try {
     saveGlobals();
-    http.request = attachLoggersToRequest.bind(http, 'http');
+    //http.request = attachLoggersToRequest.bind(http, 'http');
     https.request = attachLoggersToRequest.bind(https, 'https');
     globalLogSingleton.isEnabled = true;
   } catch (e) {
