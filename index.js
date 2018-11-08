@@ -95,13 +95,6 @@ function attachLoggersToRequest(protocol, options, callback) {
   req.on('response', function (res) {
     globalLogSingleton.emit('response', req, res);
   
-    const alreadyListensToDataEvent = res.eventNames().reduce((hasDataEvent, eventName) => {
-        const DataEvent = "data";
-        if (!hasDataEvent) {
-            hasDataEvent = eventName == DataEvent;
-        }
-        return hasDataEvent;
-    }, false);
     logInfo.request.body = requestData.join('');
     _.assign(logInfo.response,
       _.pick(
@@ -118,7 +111,7 @@ function attachLoggersToRequest(protocol, options, callback) {
     res.on('data', function (data) {
       logBodyChunk(responseData, data);
     });
-    if (!alreadyListensToDataEvent) {
+    if (res._readableState.needReadable) {
         res.pause();
     }
     res.on('end', function () {
