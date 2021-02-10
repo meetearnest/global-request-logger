@@ -34,7 +34,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "lodash": "~4.17.19"
+    "lodash": "~4.17.20"
   },
   "devDependencies": {
     "@earnest/eslint-config": "^2.1.1",
