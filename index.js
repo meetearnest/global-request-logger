@@ -1,13 +1,14 @@
 'use strict';
 
-const  http           = require('http');
-const  https          = require('https');
-const  _              = require('lodash');
-const  events         = require('events');
-const  util           = require('util');
-const  url            = require('url');
+const http = require('http');
+const https = require('https');
+const _ = require('lodash');
+const events = require('events');
+const util = require('util');
+const url = require('url');
 
 let ORIGINALS;
+
 function saveGlobals() {
   ORIGINALS = {
     http: _.pick(http, 'request'),
@@ -55,7 +56,7 @@ function attachLoggersToRequest(protocol, options, callback) {
   if (typeof options === 'string') {
     options = url.parse(options);
   }
-  _.assign(logInfo,
+  _.assign(logInfo.request,
     _.pick(
       options,
       'port',
@@ -69,10 +70,11 @@ function attachLoggersToRequest(protocol, options, callback) {
       'query',
       'pathname',
       'href'
-  ));
+    ));
 
   logInfo.request.method = req.method || 'get';
   logInfo.request.headers = req._headers;
+  logInfo.request.time = new Date();
 
   const requestData = [];
   let originalWrite = req.write;
@@ -86,34 +88,66 @@ function attachLoggersToRequest(protocol, options, callback) {
     globalLogSingleton.emit('error', logInfo.request, logInfo.response);
   });
 
-  req.on('response', function (res) {
-    logInfo.request.body = requestData.join('');
-    _.assign(logInfo.response,
-      _.pick(
-        res,
-        'statusCode',
-        'headers',
-        'trailers',
-        'httpVersion',
-        'url',
-        'method'
-    ));
+  //Wrap the request.emit method with a mocked emit method
+  fill(req, 'emit', function (origEmit) {
+    return function (eventType, maybeResponse) {
 
-    let responseData = [];
-    res.on('data', function (data) {
-      logBodyChunk(responseData, data);
-    });
-    res.on('end', function () {
-      logInfo.response.body = responseData.join('');
-      globalLogSingleton.emit('success', logInfo.request, logInfo.response);
-    });
-    res.on('error', function (error) {
-      logInfo.response.error = error;
-      globalLogSingleton.emit('error', logInfo.request, logInfo.response);
-    });
+      //Only mock emit for responses
+      if (eventType === 'response') {
+
+        //Create the logger body
+        logInfo.request.body = requestData.join('');
+
+        const propertiesToPick = ['statusCode', 'headers', 'trailers', 'httpVersion', 'url', 'method'];
+        const responseProperties = _.pick(maybeResponse, propertiesToPick);
+
+        _.assign(logInfo.response, responseProperties);
+
+        logInfo.response.time = new Date();
+
+        const responseTimeMillis = logInfo.response.time.getTime() - logInfo.request.time.getTime();
+        logInfo.response.responseTime = responseTimeMillis + 'ms';
+
+        let responseData = [];
+
+        //Emit a simulated response for the response of the request
+        fill(maybeResponse, 'emit', function (simulatedResponse) {
+          return function (evt, data) {
+
+            //Log the data
+            if (evt === 'data') {
+              logBodyChunk(responseData, data);
+
+              //Emit success if the request is ended
+            } else if (evt === 'end') {
+              logInfo.response.body = responseData.join('');
+              globalLogSingleton.emit('success', logInfo.request, logInfo.response);
+
+              //Emit error event if there is any error
+            } else if (evt === 'error') {
+              logInfo.response.error = error;
+              globalLogSingleton.emit('error', logInfo.request, logInfo.response);
+            }
+            return simulatedResponse.apply(this, arguments);
+          };
+        });
+      }
+      return origEmit.apply(this, arguments);
+    };
   });
 
   return req;
+}
+
+/**
+ * Polyfill a method
+ * @param {Object} obj object e.g. `document`
+ * @param {string} name - method name present on object e.g. `addEventListener`
+ * @param {function} replacement replacement function
+ */
+function fill(obj, name, replacement) {
+  const orig = obj[name];
+  obj[name] = replacement(orig);
 }
 
 
